@@ -3,8 +3,7 @@
 void 	deplacement(pos *perso, pos *caisse, pos contour, res reset)
 {
 	char dep;
-	dep = getchar();
-	while (getchar() != '\n');
+	read(0, &dep, 1); 
 	if (dep == 'z')
 	{
 		if (perso->y != 1)
@@ -174,12 +173,39 @@ void	sokoban(char *nbr1, char *nbr2)
 	ft_putstr("\n\nBien joué !!");
 }
 
+void	canon_term(struct termios *term)
+{
+	char	*name_term;
+
+	name_term = getenv("TERM");
+	tgetent(NULL, name_term);
+	tcgetattr(0, term);
+
+	term->c_lflag &= ~(ICANON);
+	term->c_lflag &= ~(ECHO);
+	term->c_cc[VMIN] = 1;
+	term->c_cc[VTIME] = 0;
+	tcsetattr(0, TCSADRAIN, term);
+}
+
+void	reset_term(struct termios *term)
+{
+	tcgetattr(0, term);
+	term->c_lflag = (ICANON | ECHO);
+	tcsetattr(0, 0, term);
+}
+
 int	main(int argc, char **argv)
 {
 	if (argc != 3)
 		return(0);
 	else
+	{
+		struct termios term;
+		canon_term(&term);
 		sokoban(argv[1], argv[2]);
+		reset_term(&term);
+	}
 	return(0);
 }
 		

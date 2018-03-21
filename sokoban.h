@@ -5,6 +5,9 @@
 #include <mylib.h>
 #include <stdlib.h>
 #include <time.h>
+#include <termios.h>
+#include <term.h>
+#include <unistd.h>
 #define perso_caisse perso->x == caisse->x && perso->y == caisse->y
 
 typedef struct pos pos;
